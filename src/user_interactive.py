@@ -1,5 +1,6 @@
 from src.json_worker import WorkWithJson
 from src.parser import HH
+from src.vacancy import Vacancy
 
 
 class UserInteractive(WorkWithJson):
@@ -55,7 +56,7 @@ class UserInteractive(WorkWithJson):
         Получение списка вакансий по заданному ключевому слову
         :return:
         """
-        keywords = input("Введите ключевое слово:  ")
+        keywords = input("Введите ключевое слово:  ")  # .split() сделано для одного
         print()
         res = []
         for vacancy in self.vacancies_list:
@@ -63,3 +64,37 @@ class UserInteractive(WorkWithJson):
                 res.append(vacancy)
 
         return res
+
+    @staticmethod
+    def user_interaction(self):
+        """
+        Функция для взаимодействия с пользователем
+        :param self:
+        :return:
+        """
+
+        user_name = input("Здравствуйте, как ваше имя?  ")
+        user = UserInteractive(user_name)
+
+        keyword = input("Введите запрос (ключевое слово для поиска вакансий на HH): ")
+
+        user.save_file(user.get_vacancies_list(keyword))
+
+        n = int(input("\nСколько вакансий вывести на экран (введите число): "))
+        print()
+
+        user.get_vacancies_list_from_file()
+        new_vac_list = []
+        for vacancy in user.vacancies_list:
+            vac = Vacancy.new_vacancy(vacancy)
+            new_vac_list.append(vac)
+
+        user.vacancies_list = new_vac_list
+        user.get_top_n_for_salary(n)
+        for vacancy in user.get_top_n_for_salary(n):
+            print(vacancy)
+            print()
+
+        for vacancy in user.get_vacancy_from_keywords():
+            print(vacancy)
+            print()
