@@ -39,3 +39,22 @@ class Vacancy:
             return data
         else:
             return "Отсутствует"
+
+    @classmethod
+    def new_vacancy(cls, vacancy):
+        """
+        Метод создания новой пользовательской вакансии из выгруженных с HH вакансий
+        :param vacancy:
+        :return:
+        """
+        name = vacancy.get("name")
+        area = vacancy.get("area").get("name")
+        if vacancy.get("salary"):
+            if vacancy.get("salary").get("from"):
+                salary = int(vacancy.get("salary").get("from"))
+            else:
+                salary = 0
+        else:
+            salary = 0  # "Не указана"
+
+        return cls(name, area, salary)
