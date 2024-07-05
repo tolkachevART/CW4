@@ -42,18 +42,32 @@ class WorkWithJson(ABC):
     """
 
     def __init__(self):
-        self.file_name = ""
+        self._file_name = ""
         self.abs_path = os.path.abspath("data/vacancies.json")
 
-    def read_file(self) -> None:
+    def read_file(self) -> list[dict]:
+        """
+        Чтение файла JSON.
+        :return: данные из файла в формате JSON.
+        """
         with open(self.abs_path, "r", encoding="utf-8") as file:
             return json.load(file)
 
     def save_file(self, data: list[dict]) -> None:
+        """
+        Запись данных в файл JSON.
+        :param data: список словарей с данными для сохранения.
+        :return: None
+        """
+        current_data = self.read_file()
+        combined_data = current_data + data
+
         with open(self.abs_path, "w", encoding="utf-8") as file:
-            """res = json.load(file)
-            res.append(data)"""
-            json.dump(data, file, ensure_ascii=False, indent=4)
+            json.dump(combined_data, file, ensure_ascii=False, indent=4)
 
     def delete_file(self) -> None:
+        """
+        Удаление файла JSON.
+        :return: None
+        """
         return os.remove(self.abs_path)
