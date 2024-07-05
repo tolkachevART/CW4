@@ -2,16 +2,21 @@ class Vacancy:
     """
     Класс для работы с вакансиями
     """
+    __slots__ = ('name', 'area', 'salary', 'url', 'snippet')
 
-    def __init__(self, name: str, area: str, salary: int):
+    def __init__(self, name: str, area: str, salary: int, url: str, snippet: str):
         self.name = self.__validation_data(name)
         self.area = self.__validation_data(area)
         self.salary = salary
+        self.url = url
+        self.snippet = snippet
 
     def __str__(self):
         return (f"{self.name}\n"
                 f"Город: {self.area}\n"
-                f"Зарплата: {self.salary if self.salary else "Не указана"} \n")
+                f"Зарплата: {self.salary if self.salary else "Не указана"} \n"
+                f"E-mail: {self.url}\n"
+                f"Требования: {self.snippet}\n")
 
     def __lt__(self, other):
         """
@@ -41,7 +46,7 @@ class Vacancy:
             return "Отсутствует"
 
     @classmethod
-    def new_vacancy(cls, vacancy):
+    def new_vacancy(cls, vacancy: list[dict]):
         """
         Метод создания новой пользовательской вакансии из выгруженных с HH вакансий
         :param vacancy:
@@ -56,5 +61,9 @@ class Vacancy:
                 salary = 0
         else:
             salary = 0  # "Не указана"
-
-        return cls(name, area, salary)
+        url = vacancy.get("url")
+        if vacancy.get("snippet").get("responsibility") is not None:
+            snippet = vacancy.get("snippet").get("responsibility")
+        else:
+            snippet = "Не указаны"
+        return cls(name, area, salary, url, snippet)
